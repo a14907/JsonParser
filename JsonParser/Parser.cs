@@ -39,6 +39,21 @@ namespace JsonParser
             return ProcessImpl(data).Value;
         }
 
+        public static T FromJson<T>(string json)
+        {
+            if (string.IsNullOrEmpty(json))
+            {
+                throw new ArgumentNullException(nameof(json));
+            }
+            var r =  Process(json);
+            return ConvertJsonValue<T>(r);
+        }
+
+        private static T ConvertJsonValue<T>(JsonValue r)
+        {
+            
+        }
+
         private static JsonParseResult ProcessImpl(ReadOnlySpan<char> data)
         {
             switch (data[0])
@@ -250,17 +265,5 @@ namespace JsonParser
             data = data.Slice(4);
             return new JsonParseResult(data, new TrueValue());
         }
-    }
-    ref struct JsonParseResult
-    {
-        public JsonParseResult(ReadOnlySpan<char> data, JsonValue value)
-        {
-            Data = data;
-            Value = value;
-        }
-
-        public ReadOnlySpan<char> Data { get; set; }
-        public JsonValue Value { get; set; }
-
     }
 }
